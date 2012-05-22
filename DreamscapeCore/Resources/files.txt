@@ -1,0 +1,26 @@
+--begin--
+/ helloWorld.cpp B
+// my first program in C++
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	cout << "Hello World!";
+	return 0;
+}
+--end--
+--begin--
+/ helloWorld2.cpp B
+// my first program in C++
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	cout << "Hello World!";
+	return 0;
+}
+--end--

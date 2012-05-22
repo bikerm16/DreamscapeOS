@@ -1,0 +1,16 @@
+﻿/home
+/proc
+/root
+/etc
+/var
+/usr
+/bin
+/dev
+/lib
+/tmp
+/home/user
+/dev/hda
+/dev/sda
+/dev/floppy
+/dev/cdrom
+/media
