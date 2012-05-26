@@ -9,14 +9,17 @@ namespace DreamscapeCore.AMI
 {
     public static class Main
     {
+        private static Window title, status, tools;
+        private static string[] lineOne = { "^C", "Cur Pos" };
+        private static string[] lineTwo = { "^X", "Exit" };
+        
         public static string[] Run(string file, string[] read)
         {
             Window std = Curses.InitScr();
             Curses.StartColor();
             Curses.InitPair(1, Colors.BLACK, Colors.WHITE);
-            Curses.InitPair(2, Colors.WHITE, Colors.RED);
 
-            Window title = std.SubWin(1, 80, 0, 0);
+            title = std.SubWin(1, 80, 0, 0);
             title.Background = Curses.COLOR_PAIR(1);
             title.Add(0, 2, "AMI v2.2.6");
             if (file != "")
@@ -24,14 +27,13 @@ namespace DreamscapeCore.AMI
             else
                 title.Add(0, (80 - "New Buffer".Length) / 2, "New Buffer");
 
-            Window status = std.SubWin(1, 80, 22, 0);
+            status = std.SubWin(1, 80, 22, 0);
             status.AttrOn(CursesSharp.Attrs.REVERSE);
             string statusLine = "[ Status bar ]";
             status.Add(0, (80 - statusLine.Length) / 2, statusLine);
 
-            Window tools = std.SubWin(2, 80, 23, 0);
-            tools.Background = Curses.COLOR_PAIR(2);
-            tools.Add("First line\nSecond line");
+            tools = std.SubWin(2, 80, 23, 0);
+            UpdateTools(lineOne, lineTwo);
 
             std.Refresh();
 
@@ -47,6 +49,7 @@ namespace DreamscapeCore.AMI
                     status.AttrOff(CursesSharp.Attrs.REVERSE);
                     status.Background = Curses.COLOR_PAIR(1);
                     status.Add(0, 0, "Save modified buffer (ANSWERING \"No\" WILL DESTROY CHANGES) ? ");
+                    UpdateTools(new string[] { " Y", "Yes" }, new string[] { " N", "No\t\t", "^C", "Cancel" });
                     int response = status.GetChar();
                     if ((char)response == 'n' || (char)response == 'N')
                     {
@@ -103,6 +106,7 @@ namespace DreamscapeCore.AMI
                         status.Move(0, 0); status.ClearToEol();
                         status.Add(0, (80 - statusLine.Length) / 2, statusLine);
                         status.Refresh();
+                        UpdateTools(lineOne, lineTwo);
                     }
                 }
                 else
@@ -111,6 +115,36 @@ namespace DreamscapeCore.AMI
                     return null;
                 }
             }
+        }
+
+        private static void UpdateTools(string[] lineOne, string[] lineTwo)
+        {
+            int i = 0;
+            tools.Clear();
+            tools.Move(0, 0);
+            while (i < lineOne.Length)
+            {
+                tools.AttrOn(CursesSharp.Attrs.REVERSE);
+                tools.Add(lineOne[i]);
+                i++;
+                tools.AttrOff(CursesSharp.Attrs.REVERSE);
+                tools.Add(" " + lineOne[i] + "  ");
+                i++;
+            }
+            
+            i = 0;
+            tools.Move(1, 0);
+            while (i < lineTwo.Length)
+            {
+                tools.AttrOn(CursesSharp.Attrs.REVERSE);
+                tools.Add(lineTwo[i]);
+                i++;
+                tools.AttrOff(CursesSharp.Attrs.REVERSE);
+                tools.Add(" " + lineTwo[i] + "  ");
+                i++;
+            }
+
+            tools.Refresh();
         }
     }
 }
